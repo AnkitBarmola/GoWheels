@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import './App.css'; // Make sure this file exists in the same folder
-
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import Login from './components/login';
+import Register from './components/register';
+import AddBike from './components/AddBike';
+import BikesList from './components/BikesList';
+import './App.css';
 // --- Icon Components ---
 
 const BikeIcon = ({ className }) => (
@@ -108,14 +112,11 @@ const mockBikeData = [
   },
 ];
 
-// --- Main App Component ---
-
-export default function App() {
-  const [bikes, setBikes] = useState(mockBikeData);
-
-  const handleNavClick = (page) => {
-    console.log(`Navigating to: ${page}`);
-  };
+// --- Home Component ---
+function Home() {
+  const [bikes] = useState(mockBikeData);
+  const navigate = useNavigate();
+  const isLoggedIn = localStorage.getItem('access_token');
 
   const handleActionClick = (action, bikeId = null) => {
     if (bikeId) {
@@ -125,9 +126,16 @@ export default function App() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    alert('Logged out successfully!');
+    window.location.reload();
+  };
+
   return (
     <div className="app-container">
-      {/* Header */}
+      {/* Header - YOUR ORIGINAL with working buttons */}
       <header className="app-header">
         <nav className="container navbar">
           <div className="logo-section">
@@ -135,18 +143,27 @@ export default function App() {
             <span className="logo-text">GoWheels</span>
           </div>
           <div className="desktop-menu">
-            <button onClick={() => handleNavClick('Rent a Bike')} className="nav-link">
+            <button onClick={() => navigate('/')} className="nav-link">
               Rent a Bike
             </button>
-            <button onClick={() => handleNavClick('List Your Bike')} className="nav-link">
-              List Your Bike
-            </button>
-            <button
-              onClick={() => handleNavClick('Sign In/Up')}
-              className="btn btn-primary"
-            >
-              Sign In / Up
-            </button>
+           <button onClick={() => {
+             if (isLoggedIn) {
+              navigate('/add-bike');  // ← Changed to navigate to add-bike page
+            } else {
+               navigate('/login');
+              }
+             }} className="nav-link">
+                   List Your Bike
+              </button>
+            {isLoggedIn ? (
+              <button onClick={handleLogout} className="btn btn-primary">
+                Logout
+              </button>
+            ) : (
+              <button onClick={() => navigate('/login')} className="btn btn-primary">
+                Sign In / Up
+              </button>
+            )}
           </div>
           <div className="mobile-menu-btn">
             <svg xmlns="http://www.w3.org/2000/svg" className="icon-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -169,7 +186,14 @@ export default function App() {
               The friendly peer-to-peer platform for bike rentals.
             </p>
             <button
-              onClick={() => handleActionClick('Start Your Adventure')}
+              onClick={() => {
+                if (isLoggedIn) {
+                  // Scroll to bikes section
+                  document.getElementById('rent').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                  navigate('/register');
+                }
+              }}
               className="btn btn-large btn-primary mt-8"
             >
               Start Your Adventure
@@ -178,35 +202,15 @@ export default function App() {
         </section>
 
         {/* Bike Listing Section */}
-        <section id="rent" className="section bg-gray">
-          <div className="container">
-            <h2 className="section-title">
-              Available Bikes Near You
-            </h2>
-            <div className="grid-container">
-              {bikes.map((bike) => (
-                <div key={bike.id} className="card">
-                  <img src={bike.imageUrl} alt={bike.title} className="card-image" />
-                  <div className="card-content">
-                    <div className="card-info">
-                      <h3 className="card-title">{bike.title}</h3>
-                      <p className="card-location">{bike.location}</p>
-                    </div>
-                    <div className="card-footer">
-                      <span className="price-text">${bike.price}<span className="price-unit">/day</span></span>
-                      <button
-                        onClick={() => handleActionClick('View Details', bike.id)}
-                        className="btn btn-secondary"
-                      >
-                        View Details
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Bike Listing Section */}
+         <section id="rent" className="section bg-gray">
+           <div className="container">
+               <h2 className="section-title">
+                  Available Bikes Near You
+                 </h2>
+                <BikesList />
+           </div>
+ </section>
 
         {/* How It Works Section */}
         <section id="how" className="section bg-white">
@@ -298,15 +302,29 @@ export default function App() {
             &copy; 2024 GoWheels. All rights reserved.
           </p>
           <div className="footer-links">
-            <button onClick={() => handleNavClick('Privacy')} className="footer-link">
+            <button onClick={() => alert('Privacy Policy coming soon!')} className="footer-link">
               Privacy
             </button>
-            <button onClick={() => handleNavClick('Terms')} className="footer-link">
+            <button onClick={() => alert('Terms & Conditions coming soon!')} className="footer-link">
               Terms
             </button>
           </div>
         </div>
       </footer>
     </div>
+  );
+}
+
+// --- Main App with Router ---
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/add-bike" element={<AddBike />} />
+      </Routes>
+    </Router>
   );
 }
