@@ -1,4 +1,4 @@
-oWheels is a peer-to-peer bike rental platform that connects bike owners with renters.
+GoWheels is a peer-to-peer bike rental platform that connects bike owners with renters.
 
 🏗 Project Structure
 
