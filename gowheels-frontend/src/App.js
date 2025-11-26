@@ -5,6 +5,7 @@ import Register from './components/register';
 import AddBike from './components/AddBike';
 import BikesList from './components/BikesList';
 import './App.css';
+import BikeDetails from './components/BikeDetails';
 // --- Icon Components ---
 
 const BikeIcon = ({ className }) => (
@@ -324,6 +325,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/add-bike" element={<AddBike />} />
+        <Route path="/bike/:id" element={<BikeDetails />} />
       </Routes>
     </Router>
   );

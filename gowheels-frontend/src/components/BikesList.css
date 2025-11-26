@@ -1,0 +1,108 @@
+.bikes-list-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.bike-card {
+  background-color: #2c353f; /* softer light background for better contrast */
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(2, 6, 23, 0.06);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.bike-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.bike-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(2, 6, 23, 0.08);
+}
+
+.bike-image-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* subtle dark gradient on top of images to improve text contrast */
+.bike-image-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.14) 100%);
+  pointer-events: none;
+}
+
+.bike-image {
+  width: 100%;
+  height: 10rem; /* reduced from 14rem to make cards less tall */
+  object-fit: cover;
+  display: block;
+}
+
+.bike-status {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.25);
+}
+
+.bike-status.available {
+  background-color: #16a34a; /* slightly darker green */
+}
+
+.bike-status.unavailable {
+  background-color: #dc2626; /* slightly darker red */
+}
+
+.bike-info {
+  padding: 1rem 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.bike-title {
+  font-size: 1.125rem; /* slightly smaller */
+  font-weight: 700;
+  margin: 0;
+  color: #0f172a; /* darker text for better contrast */
+}
+
+.bike-location {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: #475569; /* medium contrast */
+}
+
+.bike-price {
+  margin-top: 0.9rem;
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: #059669; /* green accent for price */
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .bikes-list-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .bikes-list-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

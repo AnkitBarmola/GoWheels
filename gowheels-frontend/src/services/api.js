@@ -26,6 +26,8 @@ export const getBike = (id) => api.get(`/bikes/${id}/`);
 export const createBike = (bikeData) => api.post('/bikes/', bikeData);
 export const getMyBikes = () => api.get('/bikes/my_bikes/');
 
+export const deleteBike = (id) => api.delete(`/bikes/${id}/`);
+
 // Booking functions
 export const createBooking = (bookingData) => api.post('/bookings/', bookingData);
 export const getMyBookings = () => api.get('/bookings/my_bookings/');
