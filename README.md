@@ -1,6 +1,5 @@
 # GoWheels
-
-A peer-to-peer bike rental platform that connects bike owners with renters.
+GoWheels is a full-stack bike rental platform enabling users to rent bikes or monetize their own. The platform ensures trust and safety with OTP-based authentication, license plate verification, and streamlined rental workflows for renters and lenders.
 
 ## Screenshots
 
@@ -14,7 +13,7 @@ A peer-to-peer bike rental platform that connects bike owners with renters.
 [![Sign Up](screenshots/register.png)](screenshots/register.png)
 
 ### Browse Bikes
-[![Bikes](screenshots/vehicles.png)](screenshots/vehicles.png)
+[![Bikes](screenshots/Vehicles.png)](screenshots/Vehicles.png)
 ### About GoWheels
 [![Bikes](screenshots/scroll.png)](screenshots/scroll.png)
 
