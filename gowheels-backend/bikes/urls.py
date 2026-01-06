@@ -16,4 +16,11 @@ urlpatterns = [
     
     # Router URLs
     path('', include(router.urls)),
+    path('', include(router.urls)),
+    
+    # NEW: OTP & Verification endpoints
+    path('send-otp/', views.send_otp, name='send-otp'),
+    path('verify-otp/', views.verify_otp, name='verify-otp'),
+    path('upload-aadhaar/', views.upload_aadhaar, name='upload-aadhaar'),
+    path('user-profile/', views.user_profile, name='user-profile'),
 ]

@@ -20,12 +20,28 @@ export const register = (userData) => api.post('/auth/register/', userData);
 export const login = (credentials) => api.post('/auth/login/', credentials);
 export const getUserProfile = () => api.get('/auth/profile/');
 
+// NEW: OTP & Verification functions
+export const sendOTP = (phoneNumber) => api.post('/send-otp/', { phone_number: phoneNumber });
+export const verifyOTP = (phoneNumber, otp, userId) => api.post('/verify-otp/', { 
+  phone_number: phoneNumber, 
+  otp: otp,
+  user_id: userId 
+});
+export const uploadAadhaar = (formData) => api.post('/upload-aadhaar/', formData, {
+  headers: { 'Content-Type': 'multipart/form-data' }
+});
+export const getUserVerificationStatus = () => api.get('/user-profile/');
+
 // Bike functions
 export const getBikes = () => api.get('/bikes/');
 export const getBike = (id) => api.get(`/bikes/${id}/`);
-export const createBike = (bikeData) => api.post('/bikes/', bikeData);
+export const createBike = (bikeData) => {
+  // bikeData should be FormData for file uploads
+  return api.post('/bikes/', bikeData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+};
 export const getMyBikes = () => api.get('/bikes/my_bikes/');
-
 export const deleteBike = (id) => api.delete(`/bikes/${id}/`);
 
 // Booking functions

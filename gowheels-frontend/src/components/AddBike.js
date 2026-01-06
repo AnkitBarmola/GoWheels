@@ -10,12 +10,16 @@ function AddBike() {
     bike_type: 'mountain',
     price_per_day: '',
     location: '',
+    number_plate: '',
     available: true
   });
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [numberPlateImage, setNumberPlateImage] = useState(null);
+  const [numberPlatePreview, setNumberPlatePreview] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [successBike, setSuccessBike] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -39,6 +43,19 @@ function AddBike() {
     }
   };
 
+  const handleNumberPlateImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setNumberPlateImage(file);
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNumberPlatePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -52,15 +69,23 @@ function AddBike() {
       data.append('bike_type', formData.bike_type);
       data.append('price_per_day', formData.price_per_day);
       data.append('location', formData.location);
+      data.append('number_plate', formData.number_plate);
       data.append('available', formData.available);
       
       if (image) {
         data.append('image', image);
       }
 
+      if (numberPlateImage) {
+        data.append('number_plate_image', numberPlateImage);
+      }
+
       await createBike(data);
-      alert('Bike listed successfully!');
-      navigate('/');
+      setSuccessBike(formData.title);
+      // Auto-redirect after 5 seconds or user can click button
+      setTimeout(() => {
+        navigate('/');
+      }, 5000);
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to add bike. Please try again.');
       console.error(err);
@@ -71,7 +96,81 @@ function AddBike() {
 
   return (
     <div className="add-bike-container">
-      <div className="add-bike-card">
+      {successBike ? (
+        // Success Modal
+        <div className="success-overlay">
+          <div className="success-card">
+            <div className="success-icon">✅</div>
+            
+            <h2 className="success-title">Thank You for Listing!</h2>
+            
+            <p className="success-message">
+              Your bike "<strong>{successBike}</strong>" has been successfully listed on GoWheels.
+            </p>
+
+            <div className="verification-info">
+              <h3 className="verification-title">🔐 Verification Badge Process</h3>
+              <p className="verification-text">
+                We're committed to maintaining a safe and trustworthy community. Your bike listing will now undergo:
+              </p>
+              
+              <div className="verification-steps">
+                <div className="step">
+                  <span className="step-number">1</span>
+                  <div className="step-content">
+                    <strong>License Plate Verification</strong>
+                    <p>Our team will verify your bike's license plate details within 24-48 hours</p>
+                  </div>
+                </div>
+
+                <div className="step">
+                  <span className="step-number">2</span>
+                  <div className="step-content">
+                    <strong>Background Check</strong>
+                    <p>We'll conduct a quick background verification to ensure community safety</p>
+                  </div>
+                </div>
+
+                <div className="step">
+                  <span className="step-number">3</span>
+                  <div className="step-content">
+                    <strong>Verification Badge</strong>
+                    <p>Once approved, your listing will display a verified badge ✓ to boost customer trust</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="verification-note">
+                <p>
+                  <strong>📧 What's Next?</strong><br/>
+                  We'll send you an email update once the verification is complete. You can also check the status anytime in your "My Bikes" section.
+                </p>
+              </div>
+            </div>
+
+            <div className="success-actions">
+              <button 
+                onClick={() => navigate('/')}
+                className="success-button success-button-primary"
+              >
+                Back to Home
+              </button>
+              <button 
+                onClick={() => navigate('/my-bikes')}
+                className="success-button success-button-secondary"
+              >
+                View My Bikes
+              </button>
+            </div>
+
+            <p className="success-redirect-text">
+              Redirecting to home in 5 seconds...
+            </p>
+          </div>
+        </div>
+      ) : (
+        // Form
+        <div className="add-bike-card">
         <div className="add-bike-header">
           <h1 className="add-bike-title">List Your Bike</h1>
           <p className="add-bike-subtitle">Share your bike and start earning!</p>
@@ -158,6 +257,40 @@ function AddBike() {
           </div>
 
           <div className="form-group">
+            <label className="form-label">License Plate Number</label>
+            <input
+              type="text"
+              name="number_plate"
+              value={formData.number_plate}
+              onChange={handleChange}
+              className="form-input"
+              placeholder="e.g., DL01AB1234"
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">License Plate Photo</label>
+            <div className="image-upload-container">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleNumberPlateImageChange}
+                className="file-input"
+                id="license-plate-image"
+              />
+              <label htmlFor="license-plate-image" className="file-label">
+                {numberPlatePreview ? 'Change License Plate Photo' : '📋 Upload License Plate Photo'}
+              </label>
+              
+              {numberPlatePreview && (
+                <div className="image-preview">
+                  <img src={numberPlatePreview} alt="License plate preview" />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="form-group">
             <label className="form-label">Bike Photo</label>
             <div className="image-upload-container">
               <input
@@ -204,6 +337,7 @@ function AddBike() {
           <Link to="/" className="back-link">← Back to Home</Link>
         </div>
       </div>
+      )}
     </div>
   );
 }

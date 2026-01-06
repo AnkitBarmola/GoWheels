@@ -3,6 +3,39 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+# NEW: User Profile Model for verification
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    phone_number = models.CharField(max_length=10, unique=True)
+    phone_verified = models.BooleanField(default=False)
+    
+    # Document uploads
+    aadhaar_card = models.ImageField(upload_to='documents/aadhaar/', blank=True, null=True)
+    aadhaar_verified = models.BooleanField(default=False)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.phone_number}"
+
+# NEW: OTP Model
+class OTPVerification(models.Model):
+    phone_number = models.CharField(max_length=10)
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_verified = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def is_valid(self):
+        from django.utils import timezone
+        # OTP valid for 10 minutes
+        return (timezone.now() - self.created_at).total_seconds() < 600
+    
+    def __str__(self):
+        return f"{self.phone_number} - {self.otp}"
+
 class Bike(models.Model):
     BIKE_TYPES = [
         ('mountain', 'Mountain Bike'),
@@ -20,6 +53,21 @@ class Bike(models.Model):
     location = models.CharField(max_length=200)
     image = models.ImageField(upload_to='bikes/', blank=True, null=True)
     available = models.BooleanField(default=True)
+    
+    # NEW: Verification fields
+    number_plate = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    number_plate_image = models.ImageField(upload_to='bikes/plates/', null=True, blank=True)
+    is_verified = models.BooleanField(default=False)
+    verification_status = models.CharField(
+        max_length=20, 
+        choices=[
+            ('pending', 'Pending Verification'),
+            ('verified', 'Verified'),
+            ('rejected', 'Rejected')
+        ], 
+        default='pending'
+    )
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

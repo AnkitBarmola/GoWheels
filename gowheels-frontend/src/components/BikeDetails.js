@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getBike, deleteBike } from '../services/api';
+import { getBike, deleteBike, createBooking } from '../services/api';
 import './BikeDetails.css';
 
 const BikeDetails = () => {
@@ -10,6 +10,14 @@ const BikeDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isOwner, setIsOwner] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [bookingData, setBookingData] = useState({
+    start_date: '',
+    end_date: ''
+  });
+  const [bookingError, setBookingError] = useState('');
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [bookingSuccess, setBookingSuccess] = useState(false);
 
   useEffect(() => {
     fetchBikeDetails();

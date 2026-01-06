@@ -169,3 +169,6 @@ import os
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MSG91_AUTH_KEY = 'your_auth_key_here'  # Get from msg91.com
+MSG91_TEMPLATE_ID = 'your_template_id_here'  # Get from msg91.com
