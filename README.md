@@ -14,7 +14,9 @@ A peer-to-peer bike rental platform that connects bike owners with renters.
 [![Sign Up](screenshots/register.png)](screenshots/register.png)
 
 ### Browse Bikes
-[![Bikes](screenshots/bikes.png)](screenshots/bikes.png)
+[![Bikes](screenshots/vehicles.png)](screenshots/vehicles.png)
+### About GoWheels
+[![Bikes](screenshots/scroll.png)](screenshots/scroll.png)
 
 ## Project Structure
 
