@@ -88,3 +88,5 @@ The app will open at `http://localhost:3000/`
 - Django
 - Django REST Framework
 - SQLite (Default Database)
+ 
+By Ankit Barmola
